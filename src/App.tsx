@@ -1,61 +1,106 @@
-import React, { useEffect } from "react";
-import logo from "./logo.svg";
-import { makeStyles } from "@material-ui/core/styles";
-import testService from "./services/TestService";
-const useStyles = makeStyles({
-  root: {
-    textAlign: "center"
-  },
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import heroService from "./sevices/hero/index";
+import { IHero } from "./interfaces/hero";
+import Map from "./components/Map/index";
+import Hero from "./components/Hero/index";
+import keyBoardService from "./sevices/keyBoard/index";
+import { combineLatest } from "rxjs/operators";
 
-  appLogo: {
-    height: "40vmin"
-  },
+function App() {
+  // const [actualPositionTop, setActualPostionTop] = useState(0);
+  // const [actualPositionLeft, setActualPostionLeft] = useState(0);
+  const [allHeroes, setAllHeroes] = useState<IHero[]>([]);
 
-  appHeader: {
-    backgroundColor: "#282c34",
-    minHeight: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "calc(10px + 2vmin)",
-    color: "white"
-  },
+  // const positionHero = (hero: IHero) => {
+  //   const element: any = document.getElementById(
+  //     `${hero.positionY}x${hero.positionX}`
+  //   );
 
-  appLink: {
-    color: "#09d3ac"
-  }
-});
+  //   if (!element) return;
 
-const App: React.FC = () => {
-  const classes = useStyles();
+  //   const heroElement: any = document.getElementById("hero");
+
+  //   setActualPostionTop(element.offsetTop + 20);
+  //   setActualPostionLeft(element.offsetLeft + 20);
+
+  //   heroElement.scrollIntoView({ block: "center" });
+  // };
+
+  const acceptedMoves: any = {
+    ArrowUp(hero: IHero) {
+      heroService.setStateHero({
+        positionY: hero.positionY - 1
+      });
+    },
+    ArrowDown(hero: IHero) {
+      heroService.setStateHero({
+        positionY: hero.positionY + 1
+      });
+    },
+    ArrowLeft(hero: IHero) {
+      heroService.setStateHero({
+        positionX: hero.positionX - 1
+      });
+    },
+    ArrowRight(hero: IHero) {
+      heroService.setStateHero({
+        positionX: hero.positionX + 1
+      });
+    }
+  };
+
   useEffect(() => {
-    testService.getMethodTest(12).subscribe(a => console.log("getMessage", a));
+    heroService.createHero();
+    heroService.receiveListHeroes();
+    const sub$ = keyBoardService
+      .eventKeyBoard()
+      .pipe(combineLatest(heroService.getStateHero()))
+      .subscribe(([key, hero]) => {
+        const fc = acceptedMoves[key];
+        if (!!fc) {
+          fc(hero);
+        }
+      });
 
-    testService.postMethodTest().subscribe(a => console.log("postMessage", a));
+    // const sub1$ = heroService
+    //   .getStateHero()
+    //   .pipe(
+    //     combineLatest(mapService.isLoading()),
+    //     filter(([, isLoading]) => !isLoading)
+    //   )
+    //   .subscribe(([hero]) => {
+    //     console.log(hero);
+    //     positionHero(hero);
+    //   });
 
-    testService
-      .deleteMethodTest(14)
-      .subscribe(v => console.log("DeleteMessage:", v));
+    const allHeroes$ = heroService
+      .getAllHeroes()
+      .subscribe(ah => setAllHeroes(ah));
+
+    return () => {
+      // sub1$.unsubscribe();
+      sub$.unsubscribe();
+      allHeroes$.unsubscribe();
+    };
   }, []);
 
+  // if (!!loading) {
+  //   return <div>Aguarde...</div>;
+  // }
   return (
-    <div className={`${classes.root}`}>
-      <header className={`${classes.appHeader}`}>
-        <img src={logo} className={`${classes.appLogo}`} alt="logo" />
-        <p>
-          Read <code>README.md</code> to more informations.
-        </p>
-        <a
-          className={`${classes.appLink}`}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Base Project React
-        </a>
-      </header>
+    <div className="App">
+      {/* <div
+        id="hero"
+        style={{ top: actualPositionTop, left: actualPositionLeft }}
+        className={classes.hero}
+      /> */}
+      {allHeroes.map((hero, index) => {
+        return <Hero key={index} hero={hero} />;
+      })}
+      <Map />
     </div>
   );
-};
+}
 
 export default App;
