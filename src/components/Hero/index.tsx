@@ -2,6 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/styles";
 import { useState, memo, useEffect } from "react";
 import { IHero } from "../../interfaces/hero";
+import * as BmanF from "../../assets/Sprites/Bomberman/Front/Bman_F_f00.png";
 
 interface IProps {
   hero: IHero;
@@ -10,9 +11,14 @@ interface IProps {
 const useStyles = makeStyles({
   hero: {
     position: "absolute",
-    width: 20,
-    height: 20,
-    backgroundColor: "yellow"
+    width: 35,
+    height: 70,
+    zIndex: 9,
+    "& > img": {
+      width: "100%",
+      height: "100%",
+      position: "relative"
+    }
   }
 });
 
@@ -34,8 +40,8 @@ const Hero = (props: IProps) => {
 
     const heroElement: any = document.getElementById("hero");
 
-    setActualPostionTop(element.offsetTop + 20);
-    setActualPostionLeft(element.offsetLeft + 20);
+    setActualPostionTop(element.offsetTop - 45);
+    setActualPostionLeft(element.offsetLeft - 2);
 
     heroElement.scrollIntoView({ block: "center" });
   };
@@ -43,9 +49,15 @@ const Hero = (props: IProps) => {
   return (
     <div
       id="hero"
-      style={{ top: actualPositionTop, left: actualPositionLeft }}
+      style={{
+        top: actualPositionTop,
+        left: actualPositionLeft,
+        transition: "all 0.2s"
+      }}
       className={classes.hero}
-    />
+    >
+      <img src={`${BmanF}`} />
+    </div>
   );
 };
 

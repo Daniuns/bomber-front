@@ -1,6 +1,9 @@
 html, body, #root, .App{
   height: 100%;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  background-color: #000;
 }
 
 .App {
