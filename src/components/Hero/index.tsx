@@ -45,14 +45,14 @@ const Hero = (props: IProps) => {
 
     heroElement.scrollIntoView({ block: "center" });
   };
-
+  console.log("speed", props.hero.speed);
   return (
     <div
       id="hero"
       style={{
         top: actualPositionTop,
         left: actualPositionLeft,
-        transition: "all 0.2s"
+        transition: `all ${props.hero.speed}s`
       }}
       className={classes.hero}
     >

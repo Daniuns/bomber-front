@@ -5,7 +5,8 @@ import socket from "../../socket";
 
 export const initialState: IHero = {
   positionY: 1,
-  positionX: 1
+  positionX: 1,
+  speed: 1
 };
 
 class Hero {
@@ -45,12 +46,13 @@ class Hero {
 
       if (!!goTo) {
         if (!goTo.bloked) {
-          console.log("attHero", newStatusHero);
           socket.emit("attHero", newStatusHero);
           this.stateHero$.next(newStatusHero);
         }
       }
-      this.refreshing = false;
+      setTimeout(() => {
+        this.refreshing = false;
+      }, this.stateHero$.getValue().speed * 1000);
     }
   };
 
