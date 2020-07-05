@@ -6,7 +6,8 @@ import socket from "../../socket";
 export const initialState: IHero = {
   positionY: 1,
   positionX: 1,
-  speed: 1
+  speed: 1,
+  img: ""
 };
 
 class Hero {
@@ -15,12 +16,11 @@ class Hero {
   private refreshing = false;
 
   createHero = () => {
-    // socket.emit("createHero", "ready");
     console.log("statehero", this.stateHero$.getValue());
     socket.on("createHero", (hero: IHero) => {
       if (!this.stateHero$.getValue().id) {
+        console.log("hero", hero);
         this.stateHero$.next(hero);
-        // this.setStateHero(hero);
       }
     });
   };

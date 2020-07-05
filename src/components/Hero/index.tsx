@@ -2,7 +2,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/styles";
 import { useState, memo, useEffect } from "react";
 import { IHero } from "../../interfaces/hero";
-import * as BmanF from "../../assets/Sprites/Bomberman/Front/Bman_F_f00.png";
+import { heroImages } from "../../sevices/hero/heroImages";
 
 interface IProps {
   hero: IHero;
@@ -45,7 +45,7 @@ const Hero = (props: IProps) => {
 
     heroElement.scrollIntoView({ block: "center" });
   };
-  console.log("speed", props.hero.speed);
+  console.log("speed", props.hero.img);
   return (
     <div
       id="hero"
@@ -56,7 +56,7 @@ const Hero = (props: IProps) => {
       }}
       className={classes.hero}
     >
-      <img src={`${BmanF}`} />
+      <img src={`${heroImages.get(`${props.hero.img}`)}`} />
     </div>
   );
 };

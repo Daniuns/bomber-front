@@ -10,15 +10,31 @@ import { combineLatest } from "rxjs/operators";
 function App() {
   const [allHeroes, setAllHeroes] = useState<IHero[]>([]);
 
+  const nextImg = (img: string) => {
+    let number = Number(img.substr(5)) + 1;
+    if (number >= 7) {
+      number = 0;
+    }
+    return img.substr(0, 6) + number;
+  };
+
   const acceptedMoves: any = {
     ArrowUp(hero: IHero) {
+      if (!hero.img.startsWith("BmanB")) {
+        hero.img = "BmanB00";
+      }
       heroService.setStateHero({
-        positionY: hero.positionY - 1
+        positionY: hero.positionY - 1,
+        img: nextImg(hero.img)
       });
     },
     ArrowDown(hero: IHero) {
+      if (!hero.img.startsWith("BmanF")) {
+        hero.img = "BmanF00";
+      }
       heroService.setStateHero({
-        positionY: hero.positionY + 1
+        positionY: hero.positionY + 1,
+        img: nextImg(hero.img)
       });
     },
     ArrowLeft(hero: IHero) {
@@ -27,8 +43,12 @@ function App() {
       });
     },
     ArrowRight(hero: IHero) {
+      if (!hero.img.startsWith("BmanR")) {
+        hero.img = "BmanR00";
+      }
       heroService.setStateHero({
-        positionX: hero.positionX + 1
+        positionX: hero.positionX + 1,
+        img: nextImg(hero.img)
       });
     }
   };
@@ -62,7 +82,6 @@ function App() {
   return (
     <div className="App">
       {allHeroes.map(hero => {
-        console.log("oi", hero);
         return <Hero key={hero.id} hero={hero} />;
       })}
       <Map />

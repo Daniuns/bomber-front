@@ -3,4 +3,5 @@ export interface IHero {
   positionX: number;
   positionY: number;
   speed: number;
+  img: string;
 }

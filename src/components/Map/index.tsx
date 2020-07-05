@@ -66,7 +66,6 @@ const Map = () => {
   if (!!loading) {
     return <div>Aguarde...</div>;
   }
-  console.log("mapppp", mapService.getMap());
   return (
     <div>
       <button onClick={activeDebugAction}>Debug</button>
